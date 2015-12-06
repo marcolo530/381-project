@@ -249,7 +249,7 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
 
                 
                 if (result.n == 1)
-                    results = {"message": "update done!"};
+                    results = {"message": "update done!!"};
                 else
                     results = {"message": "record doesn't exist!!"};
                 res.json(results);
@@ -291,7 +291,8 @@ app.put('/:field/:field_value/:attrib/:attrib_value', function (req, res) {
                     results = {"message": "update done!"};
                 else
                     results = {"message": "record doesn't exist!!"};
-                res.json(results,200, {"Content-Type" : "application/json","content-length": '357'});
+		res.set({ 'Content-Length': res._data.ContentLength});
+                res.json(results);
 
                 db.close();
             }
@@ -348,7 +349,8 @@ console.log(result);
                     results = {"message": "update done"};
                 else
                     results = {"message": "record doesn't exist!!"};
-                res.json(results,200, {"Content-Type" : "application/json","content-length": '357'});
+		res.set({ 'Content-Length': res._data.ContentLength});
+                res.json(results);
 
                 db.close();
             }
