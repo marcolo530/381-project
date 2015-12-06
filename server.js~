@@ -253,6 +253,7 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
                 else
                     results = {"message": "record doesn't exist!!"};
                 res.json(results);
+		res.end('Done', 200);
                 db.close();
             }
         });
@@ -334,7 +335,7 @@ console.log(result);
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function (callback) {
         var restaurant = mongoose.model('restaurants', restaurantSchema);
-        restaurant.update(fieldArray,{$set:jsonArray}, function (err, result) {
+        restaurant.update(fieldArray,{$set:result}, function (err, result) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.write(err.message);

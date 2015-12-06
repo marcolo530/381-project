@@ -253,6 +253,7 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
                 else
                     results = {"message": "record doesn't exist!!"};
                 res.json(results);
+		res.end('Done', 200);
                 db.close();
             }
         });
