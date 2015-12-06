@@ -253,7 +253,7 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
                 else
                     results = {"message": "record doesn't exist!!"};
                 res.json(results);
-		res.end('Done', 200);
+
                 db.close();
             }
         });
@@ -292,6 +292,7 @@ app.put('/:field/:field_value/:attrib/:attrib_value', function (req, res) {
                 else
                     results = {"message": "record doesn't exist!!"};
                 res.json(results);
+ 		res.end('END', 200);
                 db.close();
             }
         });
