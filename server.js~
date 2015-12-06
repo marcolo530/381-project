@@ -349,6 +349,7 @@ console.log(result);
                 else
                     results = {"message": "record doesn't exist!!"};
                 res.json(results);
+res.end('END', 200);
                 db.close();
             }
         });
