@@ -261,6 +261,7 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
 });
 
 app.put('/:field/:field_value/:attrib/:attrib_value', function (req, res) {
+
     var criteria = {};
     if (req.params.attrib == 'street' || req.params.attrib == 'zipcode' || req.params.attrib == 'building' || req.params.attrib == 'coord') {
 
@@ -291,8 +292,8 @@ app.put('/:field/:field_value/:attrib/:attrib_value', function (req, res) {
                     results = {"message": "update done!"};
                 else
                     results = {"message": "record doesn't exist!!"};
-		res.set({ 'Content-Length': res._data.ContentLength});
-                res.json(results);
+		
+                res.json(results,200, {"Content-Length": "375"});
 
                 db.close();
             }
@@ -349,7 +350,7 @@ console.log(result);
                     results = {"message": "update done"};
                 else
                     results = {"message": "record doesn't exist!!"};
-		res.set({ 'Content-Length': res._data.ContentLength});
+
                 res.json(results);
 
                 db.close();
