@@ -35,6 +35,35 @@ app.get('/restaurant_id/:x', function (req, res) {
     });
 });
 
+app.get('/score/:check/:x', function (req, res) {
+    mongoose.connect(MONGODBURL);
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function (callback) {
+        var restaurant = mongoose.model('restaurants', restaurantSchema);
+        //Kitten.find({name: new RegExp(req.params.x)},function(err,results){
+var temp='{"grades":{"$elemMatch":{'+'"score": {"$'+req.params.check+'":"'+req.params.x+'"}}}}';
+var obj = JSON.parse(temp);
+	
+        restaurant.find(obj, function (err, results) {
+            if (err) {
+                console.log("Error: " + err.message);
+                res.write(err.message);
+            }
+            else {
+
+                console.log('Found: ', results.length);
+                if (results.length == 0) {
+                    results = {"message": "No matching document"};
+
+                }
+                res.json(results);
+                db.close();
+            }
+        });  
+    });
+});
+
 app.get('/search/:attrib/:attrib_value', function (req, res) {
     mongoose.connect(MONGODBURL);
     var db = mongoose.connection;
@@ -261,7 +290,7 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
 });
 
 app.put('/:field/:field_value/:attrib/:attrib_value', function (req, res) {
-req.ContentLength = 0;
+
     var criteria = {};
     if (req.params.attrib == 'street' || req.params.attrib == 'zipcode' || req.params.attrib == 'building' || req.params.attrib == 'coord') {
 
