@@ -288,11 +288,11 @@ app.put('/:field/:field_value/:attrib/:attrib_value', function (req, res) {
 
                 
                 if (result.n == 1)
-                    results = {"message": "update done"};
+                    results = {"message": "update done!"};
                 else
                     results = {"message": "record doesn't exist!!"};
-                res.json(results,200, {"Content-Type" : "application/json"});
- 		
+                res.json(results,200, {"Content-Type" : "application/json","content-length": '357'});
+
                 db.close();
             }
         });
@@ -348,7 +348,7 @@ console.log(result);
                     results = {"message": "update done"};
                 else
                     results = {"message": "record doesn't exist!!"};
-                res.json(results,200, {"Content-Type" : "application/json"});
+                res.json(results,200, {"Content-Type" : "application/json","content-length": '357'});
 
                 db.close();
             }
