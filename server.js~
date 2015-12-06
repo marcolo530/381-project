@@ -345,7 +345,7 @@ app.put('/:field/:field_value/:attrib/:attrib_value/:attrib2/:attrib_value2', fu
 
      if (req.params.attrib2 == 'street' || req.params.attrib2 == 'zipcode' || req.params.attrib2 == 'building' || req.params.attrib2 == 'coord') {
 
-        criteria2["address." + req.params.attrib] = req.params.attrib_value2;
+        criteria2["address." + req.params.attrib2] = req.params.attrib_value2;
 
     } else {
         criteria2[req.params.attrib2] = req.params.attrib_value2;
