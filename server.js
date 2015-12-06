@@ -119,7 +119,7 @@ app.get('/search2Attrib/:attrib/:attrib_value/:attrib2/:attrib_value2', function
 
         } else if (req.params.attrib2 == 'street' || req.params.attrib2 == 'zipcode' || req.params.attrib2 == 'building' || req.params.attrib2 == 'coord') {
 
-            criteria2["address." + req.params.attrib] = req.params.attrib_value2;
+            criteria2["address." + req.params.attrib2] = req.params.attrib_value2;
 
         } else {
             criteria2[req.params.attrib2] = req.params.attrib_value2;
@@ -171,10 +171,16 @@ app.post('/', function (req, res) {
     if (req.body.cuisine == null) {
         req.body.cuisine = " ";
     }
-    if (req.body.restaurant_id == null) {
-        req.body.restaurant_id = " ";
+    if (req.body.grade == null) {
+        req.body.grade= " ";
     }
-
+    if (req.body.score == null) {
+        req.body.score = " ";
+    }
+    if (req.body.date == null) {
+        req.body.date = " ";
+    }
+	
 
     newRest.name = req.body.name;
     newRest.address.building = req.body.building;
@@ -185,7 +191,17 @@ app.post('/', function (req, res) {
     newRest.borough = req.body.borough;
     newRest.cuisine = req.body.cuisine;
     newRest.restaurant_id = req.body.restaurant_id;
+if ((req.body.grade==" "&req.body.date==" "&req.body.score==" ")){
 
+  console.log('123: ');
+}
+else{
+	var criteria = {};
+    criteria["date"] = req.body.date;
+    criteria["grade"] = req.body.grade;
+    criteria["score"] = req.body.score;
+    newRest.grades = criteria;
+}
     mongoose.connect(MONGODBURL);
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
@@ -231,7 +247,7 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
             }
             else {
 
-                console.log(result);
+                
                 if (result.n == 1)
                     results = {"message": "update done"};
                 else
@@ -269,7 +285,7 @@ app.put('/:field/:field_value/:attrib/:attrib_value', function (req, res) {
             }
             else {
 
-                console.log(result);
+                
                 if (result.n == 1)
                     results = {"message": "update done"};
                 else
@@ -302,8 +318,14 @@ app.put('/:field/:field_value/:attrib/:attrib_value/:attrib2/:attrib_value2', fu
         criteria2[req.params.attrib2] = req.params.attrib_value2;
     }
 
-    console.log(criteria);
-    console.log(criteria2);
+var result={};
+for(var key in criteria) result[key]=criteria[key];
+for(var key in criteria2) result[key]=criteria2[key];
+
+
+console.log(result);
+
+
     var fieldArray = {};
     fieldArray[req.params.field] = req.params.field_value;
     console.log(fieldArray);
@@ -312,15 +334,15 @@ app.put('/:field/:field_value/:attrib/:attrib_value/:attrib2/:attrib_value2', fu
     db.on('error', console.error.bind(console, 'connection error:'));
     db.once('open', function (callback) {
         var restaurant = mongoose.model('restaurants', restaurantSchema);
-        restaurant.update(fieldArray,{$set:criteria,$set:criteria2}, function (err, result) {
+        restaurant.update(fieldArray,{$set:result}, function (err, result) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.write(err.message);
             }
             else {
 
-                console.log(result);
-                if (result.n == 1)
+                
+                if (result.nModified == 1)
                     results = {"message": "update done"};
                 else
                     results = {"message": "record doesn't exist!!"};
@@ -459,11 +481,12 @@ app.delete('/:attrib/:attrib_value/:attrib2/:attrib_value2', function (req, res)
 
         } else if (req.params.attrib2 == 'street' || req.params.attrib2 == 'zipcode' || req.params.attrib2 == 'building' || req.params.attrib2 == 'coord') {
 
-            criteria2["address." + req.params.attrib] = req.params.attrib_value2;
+            criteria2["address." + req.params.attrib2] = req.params.attrib_value2;
 
         } else {
             criteria2[req.params.attrib2] = req.params.attrib_value2;
         }
+console.log('Found: ', criteria2);
 
         restaurant.remove({$and: [criteria, criteria2]}, function (err, results) {
             if (err) {
