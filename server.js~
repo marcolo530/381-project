@@ -45,7 +45,7 @@ app.get('/score/:check/:x', function (req, res) {
 var temp='{"grades":{"$elemMatch":{'+'"score": {"$'+req.params.check+'":"'+req.params.x+'"}}}}';
 var obj = JSON.parse(temp);
 	
-        restaurant.find(temp, function (err, results) {
+        restaurant.find(obj, function (err, results) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.write(err.message);
@@ -270,6 +270,71 @@ app.put('/restaurant_id/:x/grade', function (req, res) {
     db.once('open', function (callback) {
         var restaurant = mongoose.model('restaurants', restaurantSchema);
         restaurant.update({restaurant_id: req.params.x}, {$push: {grades: criteria}}, function (err, result) {
+            if (err) {
+                console.log("Error: " + err.message);
+                res.write(err.message);
+            }
+            else {
+
+                
+                if (result.n == 1)
+                    results = {"message": "update done!!"};
+                else
+                    results = {"message": "record doesn't exist!!"};
+                res.json(results);
+
+                db.close();
+            }
+        });
+    });
+});
+
+app.put('/updategrades/restaurant_id/:x', function (req, res) {
+    var criteria = {};
+    criteria["date"] = req.body.date;
+    criteria["grade"] = req.body.grade;
+    criteria["score"] = req.body.score;
+    console.log(criteria);
+
+    mongoose.connect(MONGODBURL);
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function (callback) {
+        var restaurant = mongoose.model('restaurants', restaurantSchema);
+        restaurant.update({restaurant_id: req.params.x}, {$set: {grades: criteria}}, function (err, result) {
+            if (err) {
+                console.log("Error: " + err.message);
+                res.write(err.message);
+            }
+            else {
+
+                
+                if (result.n == 1)
+                    results = {"message": "update done!!"};
+                else
+                    results = {"message": "record doesn't exist!!"};
+                res.json(results);
+
+                db.close();
+            }
+        });
+    });
+});
+
+
+
+app.put('/pushcoord/lat/:y/lon/:z/restaurant_id/:x/', function (req, res) {
+    var criteria = [];
+     criteria[0]=req.params.y;
+    criteria[1]=req.params.z;
+    console.log(criteria);
+
+    mongoose.connect(MONGODBURL);
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function (callback) {
+        var restaurant = mongoose.model('restaurants', restaurantSchema);
+        restaurant.update({restaurant_id: req.params.x}, {$set:{"address.coord":criteria}}, function (err, result) {
             if (err) {
                 console.log("Error: " + err.message);
                 res.write(err.message);
