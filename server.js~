@@ -322,6 +322,38 @@ app.put('/updategrades/restaurant_id/:x', function (req, res) {
 });
 
 
+app.put('/remotegrades/restaurant_id/:x', function (req, res) {
+    var criteria = {};
+    criteria["date"] = req.body.date;
+    criteria["grade"] = req.body.grade;
+    criteria["score"] = req.body.score;
+    console.log(criteria);
+
+    mongoose.connect(MONGODBURL);
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function (callback) {
+        var restaurant = mongoose.model('restaurants', restaurantSchema);
+        restaurant.update({restaurant_id: req.params.x}, {$pull: {grades: criteria}}, function (err, result) {
+            if (err) {
+                console.log("Error: " + err.message);
+                res.write(err.message);
+            }
+            else {
+
+                
+                if (result.n == 1)
+                    results = {"message": "update done!!"};
+                else
+                    results = {"message": "record doesn't exist!!"};
+                res.json(results);
+
+                db.close();
+            }
+        });
+    });
+});
+
 
 app.put('/pushcoord/lat/:y/lon/:z/restaurant_id/:x/', function (req, res) {
     var criteria = [];
